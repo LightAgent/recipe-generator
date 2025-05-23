@@ -8,12 +8,26 @@
   let addedIngredients: string[] = [];
   let result = "";
 
-  onMount(() => {
-    // You can replace this with a dynamic fetch if needed
-    availableIngredients = [
-      "chicken", "beef", "tofu", "rice", "onion", "garlic", "tomato", "carrot",
-      "cheese", "basil", "egg", "milk", "butter", "pepper", "spinach", "mushroom"
-    ];
+  const fallbackIngredients = [
+    "Chicken", "Beef", "Pork", "Rice", "Pasta", "Tomatoes", "Onions",
+    "Garlic", "Potatoes", "Carrots"
+  ];
+
+  onMount(async () => {
+    try {
+      const response = await fetch('/ingredient-list.json');
+      if (!response.ok) {
+        throw new Error('Failed to load ingredients');
+      }
+      const data = await response.json();
+
+      // Extract ingredient names from the JSON (using `term`)
+      availableIngredients = Array.from(new Set(data.map((item: any) => item.term.trim().toLowerCase())));
+
+    } catch (error) {
+      console.warn('Using fallback ingredients:', error);
+      availableIngredients = fallbackIngredients;
+    }
   });
 
   function addIngredient() {
