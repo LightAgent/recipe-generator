@@ -1,6 +1,4 @@
 import type { RecipeResponseModel } from '../models/recipe.model.ts';
-// import dotenv from 'dotenv';
-// import fetch from 'node-fetch';
 import { GoogleGenAI } from "@google/genai";
 
 function success(description: string): RecipeResponseModel {

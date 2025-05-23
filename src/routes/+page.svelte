@@ -9,7 +9,7 @@
   let result = "";
 
   const fallbackIngredients = [
-    "Chicken", "Beef", "Pork", "Rice", "Pasta", "Tomatoes", "Onions",
+    "Chicken", "Beef", "Rice", "Pasta", "Tomatoes", "Onions",
     "Garlic", "Potatoes", "Carrots"
   ];
 
