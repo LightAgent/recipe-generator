@@ -31,7 +31,14 @@
   });
 
   function addIngredient() {
-    if (selectedIngredient && !addedIngredients.includes(selectedIngredient)) {
+    if (!selectedIngredient) {
+      return;
+    }
+    if (!availableIngredients.includes(selectedIngredient)) {
+      alert(`"${selectedIngredient}" is not available in the ingredient list.`);
+      return;
+    }
+    if (!addedIngredients.includes(selectedIngredient)) {
       addedIngredients = [...addedIngredients, selectedIngredient];
     }
     selectedIngredient = "";

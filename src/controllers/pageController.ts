@@ -52,7 +52,7 @@ export async function generateRecipe(prompt: string): Promise<RecipeResponseMode
 
     const response = await apiKey.models.generateContent({
       model: "gemini-2.0-flash",
-      contents: `Give me 2 detailed recipes I can make using the following ingredients: ${prompt}. Each recipe should include a name, a short description, a list of ingredients, and step-by-step instructions. Keep formatting clean and easy to read. Do not use markdown symbols like ** or * or headers.`,
+      contents: `Give me 2 detailed recipes I can make using the following ingredients: ${prompt}. Do not include any other ingredients except basic ingredients. Each recipe should include a name, a short description, a list of ingredients, and step-by-step instructions. Keep formatting clean and easy to read. Do not use markdown symbols like ** or * or headers.`,
     });
 
     
