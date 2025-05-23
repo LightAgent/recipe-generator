@@ -10,8 +10,16 @@
         //     return;
         // }
         result = "Generating recipe...";
-        result = await generateRecipe(mealQuery);
-    }
+        const response = await generateRecipe(mealQuery);
+
+        
+        if ("error" in response) {
+          result = `❌ Error: ${response.error}`;
+        } else {
+          // Explicitly assert the type here
+          result = (response as { description: string }).description;
+        }
+  }
   
 </script>
 
