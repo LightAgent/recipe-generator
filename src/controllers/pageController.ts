@@ -1,13 +1,7 @@
 import type { RecipeResponseModel } from '../models/recipe.model.ts';
-import dotenv from 'dotenv';
+// import dotenv from 'dotenv';
 // import fetch from 'node-fetch';
-
-try {
-  dotenv.config();
-} catch (err) {
-  console.error("Failed to load dotenv:", err);
-}
-
+import { GoogleGenAI } from "@google/genai";
 
 function success(description: string): RecipeResponseModel {
   return { description } as RecipeResponseModel;
@@ -18,57 +12,29 @@ function failure(error: string): RecipeResponseModel {
 }
 
 
-
 export async function generateRecipe(prompt: string): Promise<RecipeResponseModel> {
   try {
+    const apiKey = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
 
-    const apiKey = process.env.GEMINI_API_KEY;
-
-    type GeminiResponse = { // nested JSON structure
-      candidates?: { // ? means optional
-        content?: {
-          parts?: {
-            text?: string;
-          }[];
-        };
-      }[];
-    };
-
-    // logging the API key for debugging
-    console.log("Prompt received:", prompt);
-    console.log("Calling Gemini API...");
-    console.log("Using API key:", apiKey); // (Only for testing! Don’t log secrets in production)
-
-
-
-    const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=' + apiKey, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }] // here is the prompt
-      })
+    const response = await apiKey.models.generateContent({
+      model: "gemini-2.0-flash",
+      contents: prompt,
     });
 
-
     
-    const data = await response.json() as GeminiResponse;
+    const data = response.text;
 
     // logging the response for debugging
     console.log("Response from Gemini:", data);
-
-
-    // Check and extract response
-    const recipeText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-    if (!recipeText) {
+    
+    if (!data) {
       return failure('Gemini did not return a valid response.');
     }
 
-    return success(recipeText)
+    return success(data)
 
   } catch (err: any) {
-  console.error('Gemini API error:', err.message || err);
-  return failure('Something went wrong calling Gemini.');
+    console.error('Gemini API error:', err.message || err);
+    return failure('Something went wrong calling Gemini.');
   }
 }
