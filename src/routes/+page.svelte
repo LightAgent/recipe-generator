@@ -1,25 +1,28 @@
 <script lang="ts">
-  import { generateRecipe } from "../controllers/pageController";
+  //import { generateRecipe } from "../controllers/pageController";
   
   let mealQuery = "";
   let result = "";
 
     async function handleGenerate() {
-        // if (mealQuery.trim() === "") {
-        //     alert("Please enter a meal query.");
-        //     return;
-        // }
         result = "Generating recipe...";
-        const response = await generateRecipe(mealQuery);
 
-        
-        if ("error" in response) {
-          result = `❌ Error: ${response.error}`;
+        const res = await fetch("/api/generate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ prompt: mealQuery })
+        });
+
+        const data = await res.json();
+
+        if ("error" in data) {
+          result = `❌ Error: ${data.error}`;
         } else {
-          // Explicitly assert the type here
-          result = (response as { description: string }).description;
+          result = data.description;
         }
-  }
+      }
   
 </script>
 
