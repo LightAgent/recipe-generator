@@ -2,11 +2,11 @@ import type { RecipeResponseModel } from '../models/recipe.model.ts';
 import { GoogleGenAI } from "@google/genai";
 
 function success(description: string): RecipeResponseModel {
-  return { description } as RecipeResponseModel;
+  return { status: 'success', description };
 }
 
 function failure(error: string): RecipeResponseModel {
-  return { error } as RecipeResponseModel;
+  return { status: 'error', error };
 }
 
 function formatRecipes(rawText: string): string {
